@@ -13,13 +13,26 @@ public class Ratings {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		init();
+		
+
+	}
+	
+	public static void init(){
 		Users.init();
 		Movies.init();
 		//initialize ratings matrix size
 		ratings = new double[Users.users.length][Movies.movies.length];
+		initToMinusOne();
 		readData("recsys-data-ratings.csv");
-		
-
+	}
+	
+	private static void initToMinusOne(){
+		for(int i=0;i<ratings.length;i++){
+			for(int k=0;k<ratings[i].length;k++){
+				ratings[i][k] = -1.0;
+			}
+		}
 	}
 	
 	private static void readData(String filename){
@@ -29,7 +42,7 @@ public class Ratings {
 			String line;
 			String[] word;
 			while ((line = in.readLine()) != null) {
-				System.out.println(line);
+				//System.out.println(line);
 				word = line.split(",");
 				ratings[Integer.parseInt(word[0])][Movies.movieMap.inverse().get(Integer.parseInt(word[1]))] = Double.parseDouble(word[2]);
 			}

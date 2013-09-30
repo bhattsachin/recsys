@@ -30,7 +30,7 @@ public class Users {
 			String[] word;
 			int val = 0;
 			while ((line = in.readLine()) != null) {
-				System.out.println(line);
+				//System.out.println(line);
 				word = line.split(",");
 				val = Integer.parseInt(word[0]);
 				if (val > max) {

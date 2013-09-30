@@ -32,7 +32,7 @@ public class Movies {
 			String[] word;
 			int val = 0;
 			while ((line = in.readLine()) != null) {
-				System.out.println(line);
+				//System.out.println(line);
 				word = line.split(",");
 				movieMap.put(val, Integer.parseInt(word[0]));
 				
