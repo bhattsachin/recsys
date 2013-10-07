@@ -101,10 +101,14 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
         // Invert and log the document frequency.  We can do this in-place.
         for (VectorEntry e: docFreq.fast()) {
             // TODO Update this document frequency entry to be a log-IDF value
-        	System.out.println(e.getKey()+  " : " + e.getValue());
+        	if(e.getKey()<50)
+        	System.out.print(e.getKey()+  " : " + e.getValue());
         	//System.out.println(Math.log(items.size()/e.getValue()));
         
         	docFreq.set(e.getKey(), Math.log((double)(items.size())/e.getValue()));
+        	if(e.getKey()<50)
+        	System.out.print("   " + docFreq.get(e.getKey()) + "\n");
+        	
         	
         }
 
@@ -122,7 +126,7 @@ public class TFIDFModelBuilder implements Provider<TFIDFModel> {
             	tv.set(e.getKey(),e.getValue()*docFreq.get(e.getKey()));
             	// TODO Normalize the TF-IDF vector to be a unit vector
                 // HINT The method tv.norm() will give you the Euclidian length of the vector
-            	System.out.println(e.getKey() + ":- " + tv.get(e.getKey()));
+            	//System.out.println(e.getKey() + ":- " + tv.get(e.getKey()));
             	//tv.set(e.getKey(), (tv.get(e.getKey()))/tv.norm());
             }
             
