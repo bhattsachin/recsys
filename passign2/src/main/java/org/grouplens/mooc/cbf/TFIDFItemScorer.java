@@ -59,9 +59,9 @@ public class TFIDFItemScorer extends AbstractItemScorer {
             
            
             //System.out.println(cosine);
-            System.out.println(e.getKey() + " :" + iv.dot(userVector));
-            System.out.println("norm(u):" + userVector.norm());
-            System.out.println("norm(v):" + iv.norm());
+            //System.out.println(e.getKey() + " :" + iv.dot(userVector));
+            //System.out.println("norm(u):" + userVector.norm());
+            //System.out.println("norm(v):" + iv.norm());
             output.set(e.getKey(), cosine);
             
             
@@ -71,6 +71,58 @@ public class TFIDFItemScorer extends AbstractItemScorer {
     }
 
     private SparseVector makeUserVector(long user) {
+        // Get the user's ratings
+        List<Rating> userRatings = dao.getEventsForUser(user, Rating.class);
+        if (userRatings == null) {
+            // the user doesn't exist
+            return SparseVector.empty();
+        }
+
+        // Create a new vector over tags to accumulate the user profile
+        MutableSparseVector profile = model.newTagVector();
+        // Fill it with 0's initially - they don't like anything
+        profile.fill(0);
+        double mean=0;
+        // Iterate over the user's ratings to build their profile
+        int totalRatings=0;
+        //calculate mean
+        for (Rating r: userRatings){
+        	Preference p = r.getPreference();
+        	mean += p.getValue();
+        	totalRatings++;
+        }
+        
+        mean = (mean)/totalRatings;
+        
+        double weight;
+        MutableSparseVector weightedItemVector;
+        
+        for (Rating r: userRatings) {
+            // In LensKit, ratings are expressions of preference
+            Preference p = r.getPreference();
+            // We'll never have a null preference. But in LensKit, ratings can have null
+            // preferences to express the user unrating an item
+            
+            weight = p.getValue()-mean;
+            
+            //weightedItemVector = model.newTagVector().mutableCopy();
+            weightedItemVector = model.getItemVector(p.getItemId()).mutableCopy();
+            weightedItemVector.multiply(weight);
+            
+          
+            profile.add(weightedItemVector);
+                // The user likes this item!
+                // TODO Get the item's vector and add it to the user's profile
+            
+        }
+
+        // The profile is accumulated, return it.
+        // It is good practice to return a frozen vector.
+        return profile.freeze();
+    }
+    
+    
+    private SparseVector makeUserVectorUnweighted(long user) {
         // Get the user's ratings
         List<Rating> userRatings = dao.getEventsForUser(user, Rating.class);
         if (userRatings == null) {
