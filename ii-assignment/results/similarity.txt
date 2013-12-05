@@ -1,0 +1,5 @@
+680,0.3749,Pulp Fiction (1994)
+77,0.3192,Memento (2000)
+629,0.3056,The Usual Suspects (1995)
+807,0.3040,Seven (a.k.a. Se7en) (1995)
+278,0.2943,The Shawshank Redemption (1994)
